@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../src/css/main.css">
+    <link rel="stylesheet" href="../src/css/infoFrame.css">
+    <link rel="stylesheet" href="../src/css/tuberList.css">
+    <link rel="stylesheet" href="../src/css/contentFrame.css">
+    <link rel="stylesheet" href="../src/css/popupListFrame.css">
+    <link rel="stylesheet" href="../src/css/addYoutuberPopup.css">
+    <link rel="stylesheet" href="../src/css/splash.css">
+    <link rel="stylesheet" href="../src/css/moreBtnPopup.css">
+    <title>Fanivory</title>
+</head>
+<body>
+    <div id="splash">
+
+    </div>
+    <div id="app">
+        <div class="frame" id="tuberListFrame">
+            <div class="tuberListContent" id="addYoutuberBtn">
+                <img src="../src/asset/add.svg" alt="Add YouTuber">
+            </div>
+            <div id="addYoutuberPopup" class="frame">
+                <h3 id="title">유튜버 추가</h3>
+                <input id="paramInput" type="url" placeholder="검색 / URL로 추가" title="">
+
+                <div id="resultList"></div>
+            </div>
+        </div>
+
+        <div class="frame" id="infoFrame">
+            <img id="profileImg" alt="프로필 사진">
+            <p id="channelName"></p>
+            <div id="subscriberFrame">
+                <img src="../src/asset/youtube.png" alt="youtube">
+                <span id="subscribers"></span>
+            </div>
+            <div id="btnList">
+                <div id="mainBtn">
+                    <div id="aboutIcon">
+                        <span class="tooltip">소개</span>
+                    </div>
+                    <div id="alarmBtn">
+                        <span class="tooltip">알람 설정</span>
+                    </div>
+                    <div id="locationIcon">
+                        <span class="tooltip"></span>
+                    </div>
+                </div>
+                <div id="moreBtn">
+                    <span class="tooltip">기타</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="moreBtnPopupFrame" class="frame">
+            <p id="joinDate"></p>
+            <p id="totalViews"></p>
+            <div id="moreBtnList">
+                <div id="reloadBtn">
+                    <img src="../src/asset/refresh.svg">
+                    <span class="tooltip"></span>
+                </div>
+                <div id="removeBtn">
+                    <span class="tooltip">삭제하기</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="popupListFrame">
+            
+        </div>
+
+        <div class="frame" id="contentFrame">
+            <h1 id="welcomeMsg" class="welcome">Fanivory v1.0.0</h1>
+            <p id="explanation" class="welcome">Fanivory를 사용해주셔서 감사합니다. 위쪽 +버튼을 눌러 유튜버를 추가해보세요!</p>
+            <img id="contentLoading" src="../src/asset/loading.svg">
+
+            <h2 id="liveTitle">Now Live</h2>
+            <div id="liveList">
+            </div>
+
+            <h2 id="videoTitle">동영상</h2>
+            <div id="videoList">
+            </div>
+        </div>
+        
+    </div>
+</body>
+    <script>let exports = {};</script>
+    <script src="script/webCrawler.js"></script>
+    <script src="script/manageYouTuber.js"></script>
+    <script src="script/manageLocalStorage.js"></script>
+    <script src="script/horizontalScroll.js"></script>
+</html>

@@ -1,0 +1,63 @@
+{
+  "name": "fanivory",
+  "version": "0.0.1",
+  "description": "The Best Program of the Fans, For the Fans, By the Fans!",
+  "main": "./build/index.js",
+  "scripts": {
+    "compile": "tsc && copyfiles -f index.html build",
+    "css": "electron ./build/index.js",
+    "start": "npm run compile && electron ./build/index.js",
+    "deploy": "electron-builder --linux"
+  },
+  "author": {
+    "name": "cottons",
+    "email": "cottons-kr@naver.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@electron/remote": "^2.0.8",
+    "@types/puppeteer": "^5.4.6",
+    "@types/youtube-player": "^5.5.6",
+    "colorthief": "^2.3.2",
+    "copyfiles": "^2.4.1",
+    "electron-builder": "^23.0.3",
+    "module-alias": "^2.2.2",
+    "puppeteer": "^13.6.0",
+    "youtube-player": "^5.5.2",
+    "yt-channel-info": "^3.0.3"
+  },
+  "build": {
+    "productName": "fanivory",
+    "appId": "kr.cottons.fanivory",
+    "asar": true,
+    "protocols": {
+      "name": "fanivory",
+      "schemes": [
+        "fanivory"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "tar.gz"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "directories": {
+      "buildResources": "./resources/installer/",
+      "output": "./dist/",
+      "app": "."
+    }
+  },
+  "_moduleAliases": {
+    "@src": "./src"
+  }
+}

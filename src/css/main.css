@@ -1,0 +1,86 @@
+@font-face {
+    font-family: 'NanumSquareRound';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/NanumSquareRound.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html, body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-drag: none;
+    font-family: 'NanumSquareRound';
+}
+
+.tooltip {
+    position: absolute;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    opacity: 0;
+    z-index: 999;
+    transition: opacity 0.2s;
+    transition-delay: 0.25s;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.tooltip:hover {
+    pointer-events: none;
+}
+
+img {
+    transform: translateZ(0);
+}
+
+h1, h2, h3 {
+    font-weight: normal;
+}
+
+::-webkit-scrollbar-track {
+    display: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #a9d5f5;
+    height: 5px;
+}
+
+#app {
+    width: calc(100vw - 100px);
+    height: calc(100vh - 100px);
+    padding: 50px;
+    background-color: #a9d5f5;
+}
+
+.frame {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 20px;
+}
+
+.show {
+    animation: show 0.3s forwards;
+}
+
+.hide {
+    animation: hide 0.3s forwards;
+}
+
+@keyframes show {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes hide {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}

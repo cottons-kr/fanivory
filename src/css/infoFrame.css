@@ -1,0 +1,158 @@
+#infoFrame {
+    width: 300px;
+    height: 184px;
+    top: 200px;
+    padding: 20px;
+    float: left;
+    position: absolute;
+}
+
+#profileImg {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+
+img[alt="youtube"] {
+    width: 25px;
+    height: 25px;
+    float: left;
+    margin-right: 8px;
+}
+
+#channelName, #subscribers {
+    font-size: 16px;
+    height: 25px;
+}
+
+#subscriberFrame {
+    width: 100%;
+    height: 25px;
+    margin-top: 5px;
+}
+
+#subscribers {
+    float: left;
+    line-height: 29px;
+}
+
+#btnList {
+    width: 100%;
+    height: 25px;
+    display: flex;
+    transform: translateY(25px);
+    justify-content: space-between;
+}
+
+#btnList div {
+    width: 25px;
+    height: 25px;
+}
+
+#mainBtn {
+    display: flex;
+    width: 125px !important;
+    justify-content: space-between;
+    float: left;
+}
+
+#mainBtn .tooltip {
+    bottom: 32px;
+    left: 0px;
+}
+
+#mainBtn div:hover .tooltip {
+    opacity: 1;
+    transition-delay: 0.5s;
+}
+
+#mainBtn div {
+    transition-duration: 0.3s;
+}
+
+img[alt="More"] {
+    float: right;
+}
+
+#aboutIcon {
+    background: url("../asset/comment.svg") no-repeat fixed;
+    background-size: cover;
+}
+
+#aboutIcon:active {
+    background: url("../asset/comment_active.svg") no-repeat fixed;
+    background-size: cover;
+}
+
+#alarmBtn {
+    background: url("../asset/bell.svg") no-repeat fixed;
+    background-size: cover;
+}
+
+#alarmBtn:active {
+    background: url("../asset/bell_active.svg") no-repeat fixed;
+    background-size: cover;
+}
+
+#alarmBtn .tooltip {
+    left: 48px;
+}
+
+#locationIcon {
+    background: url("../asset/marker.svg") no-repeat fixed;
+    background-size: cover;
+}
+
+#locationIcon .tooltip {
+    left: 103px;
+}
+
+#moreBtn {
+    background: url("../asset/menu-dots.svg") no-repeat fixed;
+    background-size: cover;
+}
+
+#moreBtn .tooltip {
+    bottom: 25px;
+}
+
+#moreBtn:hover .tooltip {
+    opacity: 1;
+    transition-delay: 0.5s;
+}
+
+.hideInfo {
+    animation: hideInfo 0.3s forwards;
+}
+
+.showInfo {
+    animation: showInfo 0.3s forwards;
+}
+
+.hideInfoFrame {
+    animation: hideInfoFrame 0.3s forwards;
+}
+
+.showInfoFrame {
+    animation: showInfoFrame 0.3s forwards;
+}
+
+@keyframes hideInfo {
+    0% { opacity: 1; margin-left: 0; }
+    100% { opacity: 0; margin-left: 12.5px; }
+}
+
+@keyframes showInfo {
+    0% { opacity: 0; margin-left: 12.5px; }
+    100% { opacity: 1; margin-left: 0; }
+}
+
+@keyframes hideInfoFrame {
+    0% { left: 50px; }
+    100% { left: -350px; }
+}
+
+@keyframes showInfoFrame {
+    0% { left: -350px; }
+    100% { left: 50px; }
+}

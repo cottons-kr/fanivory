@@ -5,7 +5,7 @@
 Other Languages : [🇰🇷 한국어 (Not yet)](/)
 <hr>
 
-Welcome to Fanivory! With this **AWESOME** program, You can meet your favorite youubers faster than the others!
+Welcome to Fanivory! With this **AWESOME** program, You can meet your favorite youtubers faster than the others!
 <br>
 This program is **STILL UNDER DEVELOPMENT!**
 

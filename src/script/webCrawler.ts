@@ -199,24 +199,28 @@ window.searchChannel = async (param: string) => {
     const page: any = data[0]
     const browser = data[1]
     await page.waitForSelector("ytm-item-section-renderer > lazy-list", { timeout: 10000 })
-    const channelList = await page.$eval("ytm-item-section-renderer > lazy-list", async (el: { childNodes: any }) => {
-        let list: Array<Object> = []
-        for (let content of el.childNodes) { // @ts-ignore
-            if (content.tagName == "YTM-COMPACT-CHANNEL-RENDERER") { // @ts-ignore
-                const name = content.querySelector("h4").innerHTML // @ts-ignore
-                const profile = content.querySelector("img").src // @ts-ignore
-                const link = content.querySelector("a").href // @ts-ignore
-                const sub = content.querySelectorAll(".small-text")[1].innerHTML
-                list.push({
-                    "name": name, 
-                    "profile": profile,
-                    "sub": sub,
-                    "link": link
-                })
+    try {
+        const channelList = await page.$eval("ytm-item-section-renderer > lazy-list", async (el: { childNodes: any }) => {
+            let list: Array<Object> = []
+            for (let content of el.childNodes) { // @ts-ignore
+                if (content.tagName == "YTM-COMPACT-CHANNEL-RENDERER") { // @ts-ignore
+                    const name = content.querySelector("h4").innerHTML // @ts-ignore
+                    const profile = content.querySelector("img").src // @ts-ignore
+                    const link = content.querySelector("a").href // @ts-ignore
+                    const sub = content.querySelectorAll(".small-text")[1].innerHTML
+                    list.push({
+                        "name": name, 
+                        "profile": profile,
+                        "sub": sub,
+                        "link": link
+                    })
+                }
             }
-        }
-        return list
-    })
-    await browser.close()
-    return channelList
+            return list
+        })
+        await browser.close()
+        return channelList
+    } catch {
+        return []
+    }
 }

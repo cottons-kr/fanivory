@@ -4,12 +4,14 @@
     float: left;
     margin-right: 20px;
     backface-visibility: hidden;
+    flex: 0 0 auto;
 }
 
 .tuberListContent img {
     width: 100%;
     height: 100%;
     border-radius: 50%;
+    image-rendering: -webkit-optimize-contrast;
 }
 
 #tuberListFrame {
@@ -17,6 +19,18 @@
     width: calc(100vw - 130px);
     height: 70px;
     padding: 15px;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
+#tuberListFrame::-webkit-scrollbar {
+    display: none;
+}
+
+#tuberList {
+    width: auto;
+    height: 70px;
+    display: flex;
 }
 
 #addYoutuberBtn {

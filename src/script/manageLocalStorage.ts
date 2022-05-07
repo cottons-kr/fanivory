@@ -82,6 +82,7 @@ window.getSettingFromStorage = (name: string = "all"): Boolean | number | undefi
 const defaultSetting = {
     "auto_reload_delay": 300000,
     "auto_reload_enable": true,
+    "max_auto_reload_count": 1,
     "bottom_youtuber_list": false,
     "enable_devtools": false,
     "slow_animation": false,
@@ -148,6 +149,7 @@ window.onload = (): void => {
 {
     "auto_reload_delay": 자동 새로고침 간격(number, 단위 : ms, 기본값 : 300000),
     "auto_reload_enable": 자동 새로고침(Boolean, 기본값 : true),
+    "max_auto_reload_count": 동시 자동 새로고침 갯수(number, 기본값 : 1)
     "bottom_youtuber_list": 하단 유튜버 리스트(Boolean, 기본값 : false),
     "slow_animation": 느린 애니메이션(Boolean, 기본값 : false),
     "disable_animation": 애니메이션 비활성화(Boolean, 기본값 : false),

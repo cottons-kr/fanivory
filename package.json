@@ -5,7 +5,7 @@
   "main": "./build/index.js",
   "scripts": {
     "compile": "tsc && copyfiles -f index.html build",
-    "css": "electron ./build/index.js",
+    "css": "electron --enable-accelerated-mjpeg-decode --enable-accelerated-video --ignore-gpu-blacklist --enable-native-gpu-memory-buffers --enable-gpu-rasterization ./build/index.js",
     "start": "npm run compile && electron ./build/index.js",
     "deploy": "electron-builder --linux"
   },

@@ -41,6 +41,12 @@ window.removeYoutuberFromStorage = (name: string): object => {
         else { return true }
     })
     localStorage["youtuber"] = JSON.stringify(db)
+
+    let list: Array<string> = JSON.parse(localStorage["youtuberlist"])
+    list.splice(list.indexOf(name), 1)
+    localStorage["youtuberlist"] = JSON.stringify(list)
+
+    if (window.getStatusFromStorage()["recentYoutuber"] == name) { localStorage["status"] = "{}" }
     return db
 }
 

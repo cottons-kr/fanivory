@@ -20,6 +20,10 @@ const channelName: HTMLElement = document.querySelector("#channelName")
 const joinDate: HTMLElement = document.querySelector("#joinDate")
 const totalViews: HTMLElement = document.querySelector("#totalViews")
 const locationTooltip: HTMLSpanElement = document.querySelector("#locationIcon .tooltip")
+const removeBtn: HTMLDivElement = document.querySelector("#removeBtn")
+const subscriberFrame = document.getElementById("subscriberFrame")
+const liveListTitle: HTMLDivElement = document.querySelector("#liveTitle")
+const videoListTitle: HTMLDivElement = document.querySelector("#videoTitle")
 
 let loadingYoutuber: string = ""
 let showingYoutuber: string = ""
@@ -58,8 +62,28 @@ function removeAllChild(el: HTMLElement, param={ transition: false }) {
 
 function loadSavedYoutubers() {
     if (localStorage["youtuber"]) { 
+        removeAllChild(tuberListFrame)
         const youtubers: Array<any> = JSON.parse(localStorage["youtuber"])
         youtubers.forEach(data => { addContentToList(data["profileImg"], data["name"]) })
+    }
+    if (window.getYoutuberListFromStorage().length == 0) {
+        const addBtnFrame = document.createElement("div")
+        const addBtnImg = document.createElement("img")
+        if (addYoutuberPopup.classList.contains("show")) {
+            addBtnFrame.style.transform = "rotate(45deg)"
+        } else if (addYoutuberPopup.classList.contains("hide")) {
+            addBtnFrame.style.transform = "rotate(0deg)"
+        }
+        addBtnFrame.classList.add("tuberListContent")
+        addBtnFrame.setAttribute("id", "addYoutuberBtn")
+        addBtnImg.src = "../src/asset/add.svg"
+        addBtnImg.alt = "Add YouTuber"
+        addBtnFrame.appendChild(addBtnImg)
+        addBtnFrame.addEventListener("click", addYoutuberBtnClickEffect)
+        addYoutuberBtn = addBtnFrame
+        setTimeout(() => { addYoutuberPopup.style.left = `${addBtnFrame.offsetLeft + 80}px` }, 100)
+        
+        tuberListFrame.appendChild(addBtnFrame)
     }
 }
 
@@ -172,17 +196,16 @@ function showVideos(data: any) {
 }
 
 function showYoutuber(name: string): void {
+    if (showingYoutuber == name) { return }
+
     const data = window.getYoutuberFromStorage(name)
-    const subscriberFrame = document.getElementById("subscriberFrame")
-    const liveListTitle: HTMLDivElement = document.querySelector("#liveTitle")
-    const videoListTitle: HTMLDivElement = document.querySelector("#videoTitle")
 
     reloadBtnTooltip.innerHTML = `최근 새로고침 : ${window.getYoutuberReloadTime(name)}`
 
     showingYoutuber = name
     isMorePopupOpen = false
     window.setRecentYoutuberToStorage(name)
-    reloadYoutuber()
+    if (loadingYoutuber != name) { reloadYoutuber() }
 
     setTimeout(() => {
         if (reloadingYoutuber == showingYoutuber && !reloadBtn.classList.contains("reloading")) {
@@ -201,12 +224,14 @@ function showYoutuber(name: string): void {
     subscriberFrame.classList.add("hideInfo")
     profileImg.classList.add("hideInfo")
     moreBtnPopupFrame.classList.add("hide")
+    loading.classList.add("hide")
     setTimeout(() => { moreBtnPopupFrame.style.display = "none" }, 300)
 
     channelName.classList.remove("showInfo")
     subscriberFrame.classList.remove("showInfo")
     profileImg.classList.remove("showInfo")
     moreBtnPopupFrame.classList.remove("show")
+    loading.classList.remove("show")
 
     infoFrame.classList.remove("hideInfoFrame")
     contentFrame.classList.remove("longWidth")
@@ -241,8 +266,15 @@ function showYoutuber(name: string): void {
         if (data["about"]["location"] != undefined) { locationTooltip.innerHTML = data["about"]["location"] }
         else { locationTooltip.innerHTML = "알 수 없음" }
 
-        showLives(data)
-        showVideos(data)
+        if (loadingYoutuber == showingYoutuber) {
+            loading.classList.add("show")
+            loading.classList.remove("hide")
+        }
+
+        if (loadingYoutuber != name) {
+            showLives(data)
+            showVideos(data)
+        }
     }, 300)
 }
 
@@ -306,7 +338,7 @@ function addContentToList(imgSrc: string, name: string) {
     addBtnFrame.appendChild(addBtnImg)
     addBtnFrame.addEventListener("click", addYoutuberBtnClickEffect)
     addYoutuberBtn = addBtnFrame
-    setTimeout(() => { addYoutuberPopup.style.left = `${addBtnFrame.offsetLeft + 30}px` }, 100)
+    setTimeout(() => { addYoutuberPopup.style.left = `${addBtnFrame.offsetLeft + 80}px` }, 100)
     
     tuberListFrame.appendChild(addBtnFrame)
 }
@@ -319,12 +351,61 @@ async function addYoutuber(url: string) {
     let data = await window.getYoutuber(url)
     addContentToList(data["profileImg"], data["name"])
     window.saveYoutuberToStorage(data)
+    loadingYoutuber = data["name"]
     showYoutuber(data["name"])
     loading.style.display = "block"
 
     window.saveYoutuberToStorage({...data, ...await window.getInfo(url)})
     loading.style.display = "none"
-    showYoutuber(data["name"])
+    loadingYoutuber = ""
+    setTimeout(() => { showYoutuber(data["name"]) }, 100)
+}
+
+function removeYoutuber(name: string) {
+    clearInterval(reloadInterval)
+    liveListTitle.classList.add("hideList")
+    liveListTitle.classList.remove("showList")
+    videoListTitle.classList.add("hideList")
+    videoListTitle.classList.remove("showList")
+
+    channelName.classList.add("hideInfo")
+    subscriberFrame.classList.add("hideInfo")
+    profileImg.classList.add("hideInfo")
+    moreBtnPopupFrame.classList.add("hide")
+    loading.classList.add("hide")
+    setTimeout(() => { moreBtnPopupFrame.style.display = "none" }, 300)
+
+    channelName.classList.remove("showInfo")
+    subscriberFrame.classList.remove("showInfo")
+    profileImg.classList.remove("showInfo")
+    moreBtnPopupFrame.classList.remove("show")
+    loading.classList.remove("show")
+
+    document.querySelectorAll("#contentFrame .welcome").forEach((el: HTMLElement) => {
+        el.classList.add("hide")
+        setTimeout(() => { el.style.display = "none" }, 300)
+    })
+    videoListFrame.classList.add("show")
+    
+    removeAllChild(liveListFrame, { transition: true })
+    removeAllChild(videoListFrame, { transition: true })
+    if (!window.getYoutuberListFromStorage()[0]) { showYoutuber(window.getYoutuberListFromStorage()[0]) }
+    else {
+        setTimeout(() =>{
+            infoFrame.classList.add("hideInfoFrame")
+            contentFrame.classList.add("longWidth")
+            infoFrame.classList.remove("showInfoFrame")
+            contentFrame.classList.remove("default")
+    
+            document.querySelectorAll("#contentFrame .welcome").forEach((el: HTMLElement) => {
+                el.style.display = "block"
+                el.classList.add("show")
+                el.classList.remove("hide")
+            })
+        }, 300)
+    }
+    window.removeYoutuberFromStorage(name)
+    loadSavedYoutubers()
 }
 
 function sleep(time: number) {
@@ -415,12 +496,11 @@ function reloadYoutuber() {
             reloadBtnTooltip.innerHTML = `최근 새로고침 : ${getDate()}`
             window.setYoutuberReloadTime(currentYoutuber, getDate())
             reloadBtn.classList.remove("reloading")
-            if (lives.length!= beforeLives.length || videos.length != beforeLives.length) {
+            if (lives.length != beforeLives.length || videos.length != beforeLives.length) {
                 showYoutuber(currentYoutuber)
                 return
             }
             else if (videoFilter.length == 0 && liveFilter.length == 0 && sub == beforeSub) {
-                console.log(`${currentYoutuber}: NOTHING CHANGED`)
                 updateVideo(window.getYoutuberFromStorage(currentYoutuber)["video"])
                 updateLive(window.getYoutuberFromStorage(currentYoutuber)["live"])
                 return
@@ -506,6 +586,8 @@ document.getElementById("moreBtn").addEventListener("click", () => {
         isMorePopupOpen = true
     }
 })
+
+removeBtn.addEventListener("click", () => { removeYoutuber(showingYoutuber) })
 
 window.addEventListener("load", () => {
     loadSavedYoutubers()

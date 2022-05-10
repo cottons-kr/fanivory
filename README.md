@@ -9,4 +9,6 @@ Welcome to Fanivory! With this **AWESOME** program, You can meet your favorite y
 <br>
 This program is **STILL UNDER DEVELOPMENT!**
 
+[Click here](/TODOS.md) to check how much features was developed!
+
 

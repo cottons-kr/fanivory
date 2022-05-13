@@ -197,6 +197,7 @@ function showVideos(data: any) {
 
 function showYoutuber(name: string): void {
     if (showingYoutuber == name) { return }
+    console.log(`${name}: Show`)
 
     const data = window.getYoutuberFromStorage(name)
 
@@ -223,20 +224,23 @@ function showYoutuber(name: string): void {
     channelName.classList.add("hideInfo")
     subscriberFrame.classList.add("hideInfo")
     profileImg.classList.add("hideInfo")
-    moreBtnPopupFrame.classList.add("hide")
     loading.classList.add("hide")
     setTimeout(() => { moreBtnPopupFrame.style.display = "none" }, 300)
 
     channelName.classList.remove("showInfo")
     subscriberFrame.classList.remove("showInfo")
     profileImg.classList.remove("showInfo")
-    moreBtnPopupFrame.classList.remove("show")
     loading.classList.remove("show")
 
     infoFrame.classList.remove("hideInfoFrame")
     contentFrame.classList.remove("longWidth")
     infoFrame.classList.add("showInfoFrame")
     contentFrame.classList.add("default")
+
+    if (moreBtnPopupFrame.classList.contains("show")) {
+        moreBtnPopupFrame.classList.remove("show")
+        moreBtnPopupFrame.classList.add("hide")
+    }
 
     document.querySelectorAll("#contentFrame .welcome").forEach((el: HTMLElement) => {
         el.classList.add("hide")
@@ -313,7 +317,7 @@ function updateInfo(data: any) {
 }
 
 function addContentToList(imgSrc: string, name: string) {
-    tuberListFrame.removeChild(document.querySelector("#addYoutuberBtn"))
+    if (tuberListFrame.hasChildNodes()) { tuberListFrame.removeChild(document.querySelector("#addYoutuberBtn")) }
 
     const contentFrame = document.createElement("div")
     const contentImg = document.createElement("img")
@@ -358,7 +362,7 @@ async function addYoutuber(url: string) {
     window.saveYoutuberToStorage({...data, ...await window.getInfo(url)})
     loading.style.display = "none"
     loadingYoutuber = ""
-    setTimeout(() => { showYoutuber(data["name"]) }, 100)
+    setTimeout(() => { showYoutuber(data["name"]) }, 500)
 }
 
 function removeYoutuber(name: string) {

@@ -31,7 +31,9 @@
     width: auto;
     height: 70px;
     display: flex;
-overflow-x: hidden;overflow-y: hidden;}
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
 
 #addYoutuberBtn {
     width: calc(70px - 40px);

@@ -195,9 +195,8 @@ function showVideos(data: any) {
     }
 }
 
-function showYoutuber(name: string): void {
-    if (showingYoutuber == name) { return }
-    console.log(`${name}: Show`)
+function showYoutuber(name: string, force=false): void {
+    if (showingYoutuber == name && !force) { return }
 
     const data = window.getYoutuberFromStorage(name)
 
@@ -243,7 +242,9 @@ function showYoutuber(name: string): void {
     }
 
     document.querySelectorAll("#contentFrame .welcome").forEach((el: HTMLElement) => {
+        console.log(el)
         el.classList.add("hide")
+        el.classList.remove("show")
         setTimeout(() => { el.style.display = "none" }, 300)
     })
     videoListFrame.classList.add("show")
@@ -256,11 +257,9 @@ function showYoutuber(name: string): void {
         channelName.classList.add("showInfo")
         subscriberFrame.classList.add("showInfo")
         profileImg.classList.add("showInfo")
-        moreBtnPopupFrame.classList.add("show")
         channelName.classList.remove("hideInfo")
         subscriberFrame.classList.remove("hideInfo")
         profileImg.classList.remove("hideInfo")
-        moreBtnPopupFrame.classList.add("hide")
 
         profileImg.src = data["profileImg"]
         channelName.innerHTML = data["name"]
@@ -356,13 +355,17 @@ async function addYoutuber(url: string) {
     addContentToList(data["profileImg"], data["name"])
     window.saveYoutuberToStorage(data)
     loadingYoutuber = data["name"]
-    showYoutuber(data["name"])
+    showYoutuber(data["name"], true)
+    loading.classList.remove("hide")
+    loading.classList.add("show")
     loading.style.display = "block"
 
     window.saveYoutuberToStorage({...data, ...await window.getInfo(url)})
-    loading.style.display = "none"
+    loading.classList.remove("show")
+    loading.classList.add("hide")
+    setTimeout(() => { loading.style.display = "none" }, 300)
     loadingYoutuber = ""
-    setTimeout(() => { showYoutuber(data["name"]) }, 500)
+    setTimeout(() => { showYoutuber(data["name"], true) }, 500)
 }
 
 function removeYoutuber(name: string) {

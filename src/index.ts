@@ -19,7 +19,7 @@ app.on("ready", () => {
     require('@electron/remote/main').initialize()
     require("@electron/remote/main").enable(window.webContents)
     
-    window.loadFile("index.html")
+    window.loadFile("./index.html")
     //window.on("close", (e) => { e.preventDefault(); window.minimize() }) //Publishing Code
     window.on("close", () => { window.destroy(); app.exit(0) }) //Developing Code
 })

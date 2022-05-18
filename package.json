@@ -7,7 +7,7 @@
     "compile": "tsc && copyfiles -f index.html build",
     "css": "electron --enable-accelerated-mjpeg-decode --enable-accelerated-video --ignore-gpu-blacklist --enable-native-gpu-memory-buffers --enable-gpu-rasterization ./build/index.js",
     "start": "npm run compile && electron ./build/index.js",
-    "deploy": "electron-builder --linux"
+    "deploy": "electron-builder --linux --win"
   },
   "author": {
     "name": "cottons",
@@ -20,11 +20,13 @@
     "@types/youtube-player": "^5.5.6",
     "colorthief": "^2.3.2",
     "copyfiles": "^2.4.1",
-    "electron-builder": "^23.0.3",
     "module-alias": "^2.2.2",
     "puppeteer": "^13.6.0",
     "youtube-player": "^5.5.2",
     "yt-channel-info": "^3.0.3"
+  },
+  "devDependencies": {
+    "electron-builder": "^23.0.3"
   },
   "build": {
     "productName": "fanivory",

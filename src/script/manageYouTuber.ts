@@ -47,12 +47,56 @@ function getThumbnail(url: string) {
     return (`https://i.ytimg.com/vi/${url.replace(/^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/g,"$1")}/original.jpg`)
 }
 
+function hideElement(el: HTMLElement) {
+    el.style.display = "none"
+}
+
+function showElement(el: HTMLElement) {
+    el.style.display = "block"
+}
+
+function hideElementWithAnimation(el: HTMLElement, displayNone: boolean = false, animationDuration: number = 300) {
+    el.classList.add("hide")
+    el.classList.remove("show")
+    if (displayNone) {
+        setTimeout(() => { el.style.display = "none" }, animationDuration)
+    }
+}
+
+function showElementWithAnimation(el: HTMLElement) {
+    el.style.display = "block"
+    el.classList.add("show")
+    el.classList.remove("hide")
+}
+
+function advencedPlayAnimation(el: HTMLElement, param={
+    animationName: "",
+    animationDuration: 300,
+    removeClassName: ""
+}) {
+    el.classList.remove(param.removeClassName)
+    el.classList.add(param.animationName)
+}
+
+function playAnimation(el: HTMLElement, animationName: string) {
+    if (animationName.includes("hide")) {
+        el.classList.remove(animationName.replace("hide", "show"))
+    }
+    else if (animationName.includes("show")) {
+        el.classList.remove(animationName.replace("show", "hide"))
+    }
+    el.classList.add(animationName)
+}
+
 function removeAllChild(el: HTMLElement, param={ transition: false }) {
     if (param.transition) {
         el.childNodes.forEach((e: any) => {
             if (e.tagName) {
-                e.classList.remove("showVideo")
-                e.classList.add("hideVideo")
+                advencedPlayAnimation(e, {
+                    animationName: "hideVideo",
+                    animationDuration: 300,
+                    removeClassName: "showVideo"
+                })
             }
         })
         setTimeout(() => { while (el.firstChild) { el.removeChild(el.lastChild) } }, 300)
@@ -107,9 +151,12 @@ function showLives(data: any) {
             return
         }
         liveListFrame.style.display = "flex"
-        document.querySelector("#liveTitle").classList.add("showList")
-        document.querySelector("#liveTitle").classList.remove("hideList")
-        document.getElementById("liveTitle").style.display = "block"
+        showElement(document.querySelector("#liveTitle"))
+        advencedPlayAnimation(document.querySelector("#liveTitle"), {
+            animationName: "showList",
+            animationDuration: 300,
+            removeClassName: "hideList"
+        })
         const liveList: Array<any> = data["live"]
         liveList.forEach(livedata => {
             const frame = document.createElement("div")
@@ -123,23 +170,21 @@ function showLives(data: any) {
             title.innerHTML = livedata["title"]
 
             frame.addEventListener("mouseover", () => {
-                hoveringContent.classList.add("show")
-                hoveringContent.classList.remove("hide")
+                showElementWithAnimation(hoveringContent)
             })
             
             frame.addEventListener("mouseleave", () => {
-                hoveringContent.classList.add("hide")
-                hoveringContent.classList.remove("show")
+                hideElementWithAnimation(hoveringContent)
             })
 
             hoveringContent.appendChild(title)
             frame.appendChild(hoveringContent)
             liveListFrame.appendChild(frame)
-            frame.classList.add("showVideo")
+            playAnimation(frame, "showVideo")
         })
     } else {
-        liveListFrame.style.display = "none"
-        document.getElementById("liveTitle").style.display = "none"
+        hideElement(liveListFrame)
+        hideElement(document.getElementById("liveTitle"))
     } 
 }
 
@@ -147,16 +192,19 @@ function showVideos(data: any) {
     const videoListFrame: HTMLElement = document.querySelector("#videoList")
     if (data["video"].length != 0) { // Video
         if (data["video"] == undefined) {
-            videoListFrame.style.display = "none"
-            document.getElementById("videoTitle").style.display = "none"
+            hideElement(videoListFrame)
+            hideElement(document.getElementById("videoTitle"))
             return
         }
         if (document.getElementById("liveList").offsetHeight <= 0) { videoListFrame.style.height = "calc(100% - 69px)" }
         else { videoListFrame.style.height = `calc(100% - ${document.getElementById("liveList").offsetHeight+109}px)` }
         videoListFrame.style.display = "flex"
-        document.getElementById("videoTitle").style.display = "block"
-        document.querySelector("#videoTitle").classList.add("showList")
-        document.querySelector("#videoTitle").classList.remove("hideList")
+        showElement(document.querySelector("#videoTitle"))
+        advencedPlayAnimation(document.querySelector("#videoTitle"), {
+            animationName: "showList",
+            animationDuration: 300,
+            removeClassName: "hideList"
+        })
         const videoList: Array<any> = data["video"]
         videoList.forEach(videodata => {
             const frame = document.createElement("div")
@@ -175,23 +223,21 @@ function showVideos(data: any) {
             else { info.innerHTML = `조회수 ${videodata["views"]}회 · ${videodata["date"]} 전` }
 
             frame.addEventListener("mouseover", () => {
-                hoveringContent.classList.add("show")
-                hoveringContent.classList.remove("hide")
+                showElementWithAnimation(hoveringContent)
             })
             frame.addEventListener("mouseleave", () => {
-                hoveringContent.classList.add("hide")
-                hoveringContent.classList.remove("show")
+                hideElementWithAnimation(hoveringContent)
             })
 
             hoveringContent.appendChild(title)
             hoveringContent.appendChild(info)
             frame.appendChild(hoveringContent)
             videoListFrame.appendChild(frame)
-            frame.classList.add("showVideo")
+            playAnimation(frame, "showVideo")
         })
     } else {
-        document.getElementById("videoTitle").style.display = "none"
-        videoListFrame.style.display = "none"
+        hideElement(document.getElementById("videoTitle"))
+        hideElement(videoListFrame)
     }
 }
 
@@ -209,57 +255,49 @@ function showYoutuber(name: string, force=false): void {
 
     setTimeout(() => {
         if (reloadingYoutuber == showingYoutuber && !reloadBtn.classList.contains("reloading")) {
-            reloadBtn.classList.add("reloading")
+            playAnimation(reloadBtn, "reloading")
             reloadBtnTooltip.innerHTML = "새로고침중..." 
         }
         else if (reloadingYoutuber != showingYoutuber && reloadBtn.classList.contains("reloading")) { reloadBtn.classList.remove("reloading") }
     }, 300)
 
-    liveListTitle.classList.add("hideList")
-    liveListTitle.classList.remove("showList")
-    videoListTitle.classList.add("hideList")
-    videoListTitle.classList.remove("showList")
 
-    channelName.classList.add("hideInfo")
-    subscriberFrame.classList.add("hideInfo")
-    profileImg.classList.add("hideInfo")
-    loading.classList.add("hide")
-    setTimeout(() => { moreBtnPopupFrame.style.display = "none" }, 300)
+    playAnimation(liveListTitle, "hideList")
+    playAnimation(videoListTitle, "hideList")
 
-    channelName.classList.remove("showInfo")
-    subscriberFrame.classList.remove("showInfo")
-    profileImg.classList.remove("showInfo")
-    loading.classList.remove("show")
+    playAnimation(channelName, "hideInfo")
+    playAnimation(subscriberFrame, "hideInfo")
+    playAnimation(profileImg, "hideInfo")
+    hideElementWithAnimation(loading)
+    setTimeout(() => { hideElement(moreBtnPopupFrame) }, 300)
 
-    infoFrame.classList.remove("hideInfoFrame")
-    contentFrame.classList.remove("longWidth")
-    infoFrame.classList.add("showInfoFrame")
-    contentFrame.classList.add("default")
+    playAnimation(infoFrame, "showInfoFrame")
+    if (contentFrame.classList.contains("longWidth")) {
+        advencedPlayAnimation(contentFrame, {
+            animationName: "default",
+            animationDuration: 300,
+            removeClassName: "longWidth"
+        })
+    }
 
     if (moreBtnPopupFrame.classList.contains("show")) {
-        moreBtnPopupFrame.classList.remove("show")
-        moreBtnPopupFrame.classList.add("hide")
+        hideElementWithAnimation(moreBtnPopupFrame)
     }
 
     document.querySelectorAll("#contentFrame .welcome").forEach((el: HTMLElement) => {
         console.log(el)
-        el.classList.add("hide")
-        el.classList.remove("show")
-        setTimeout(() => { el.style.display = "none" }, 300)
+        hideElementWithAnimation(el, true)
     })
-    videoListFrame.classList.add("show")
+    showElementWithAnimation(videoListFrame)
     
     removeAllChild(liveListFrame, { transition: true })
     removeAllChild(videoListFrame, { transition: true })
 
     clearTimeout(showingTimeout)
     showingTimeout = setTimeout(() => { // 기본 정보
-        channelName.classList.add("showInfo")
-        subscriberFrame.classList.add("showInfo")
-        profileImg.classList.add("showInfo")
-        channelName.classList.remove("hideInfo")
-        subscriberFrame.classList.remove("hideInfo")
-        profileImg.classList.remove("hideInfo")
+        playAnimation(channelName, "showInfo")
+        playAnimation(subscriberFrame, "showInfo")
+        playAnimation(profileImg, "showInfo")
 
         profileImg.src = data["profileImg"]
         channelName.innerHTML = data["name"]
@@ -270,8 +308,7 @@ function showYoutuber(name: string, force=false): void {
         else { locationTooltip.innerHTML = "알 수 없음" }
 
         if (loadingYoutuber == showingYoutuber) {
-            loading.classList.add("show")
-            loading.classList.remove("hide")
+            showElementWithAnimation(loading)
         }
 
         if (loadingYoutuber != name) {
@@ -347,8 +384,7 @@ function addContentToList(imgSrc: string, name: string) {
 }
 
 async function addYoutuber(url: string) {
-    addYoutuberPopup.classList.remove("show")
-    addYoutuberPopup.classList.add("hide")
+    hideElementWithAnimation(addYoutuberPopup)
     addYoutuberBtn.style.transform = "rotate(0deg)"
 
     let data = await window.getYoutuber(url)
@@ -356,58 +392,44 @@ async function addYoutuber(url: string) {
     window.saveYoutuberToStorage(data)
     loadingYoutuber = data["name"]
     showYoutuber(data["name"], true)
-    loading.classList.remove("hide")
-    loading.classList.add("show")
-    loading.style.display = "block"
+    showElementWithAnimation(loading)
 
     window.saveYoutuberToStorage({...data, ...await window.getInfo(url)})
-    loading.classList.remove("show")
-    loading.classList.add("hide")
-    setTimeout(() => { loading.style.display = "none" }, 300)
+    hideElementWithAnimation(loading, true)
     loadingYoutuber = ""
     setTimeout(() => { showYoutuber(data["name"], true) }, 500)
 }
 
 function removeYoutuber(name: string) {
     clearInterval(reloadInterval)
-    liveListTitle.classList.add("hideList")
-    liveListTitle.classList.remove("showList")
-    videoListTitle.classList.add("hideList")
-    videoListTitle.classList.remove("showList")
+    playAnimation(liveListTitle, "hideList")
+    playAnimation(videoListTitle, "hideList")
 
-    channelName.classList.add("hideInfo")
-    subscriberFrame.classList.add("hideInfo")
-    profileImg.classList.add("hideInfo")
-    moreBtnPopupFrame.classList.add("hide")
-    loading.classList.add("hide")
-    setTimeout(() => { moreBtnPopupFrame.style.display = "none" }, 300)
-
-    channelName.classList.remove("showInfo")
-    subscriberFrame.classList.remove("showInfo")
-    profileImg.classList.remove("showInfo")
-    moreBtnPopupFrame.classList.remove("show")
-    loading.classList.remove("show")
+    playAnimation(channelName, "hideInfo")
+    playAnimation(subscriberFrame, "hideInfo")
+    playAnimation(profileImg, "hideInfo")
+    hideElementWithAnimation(loading)
+    hideElementWithAnimation(moreBtnPopupFrame, true)
 
     document.querySelectorAll("#contentFrame .welcome").forEach((el: HTMLElement) => {
-        el.classList.add("hide")
-        setTimeout(() => { el.style.display = "none" }, 300)
+        hideElementWithAnimation(el, true)
     })
-    videoListFrame.classList.add("show")
-    
+    showElementWithAnimation(videoListFrame)
+
     removeAllChild(liveListFrame, { transition: true })
     removeAllChild(videoListFrame, { transition: true })
     if (!window.getYoutuberListFromStorage()[0]) { showYoutuber(window.getYoutuberListFromStorage()[0]) }
     else {
         setTimeout(() =>{
-            infoFrame.classList.add("hideInfoFrame")
-            contentFrame.classList.add("longWidth")
-            infoFrame.classList.remove("showInfoFrame")
-            contentFrame.classList.remove("default")
+            advencedPlayAnimation(contentFrame, {
+                animationName: "longWidth",
+                animationDuration: 300,
+                removeClassName: "default"
+            })
+            playAnimation(infoFrame, "hideInfoFrame")
     
             document.querySelectorAll("#contentFrame .welcome").forEach((el: HTMLElement) => {
-                el.style.display = "block"
-                el.classList.add("show")
-                el.classList.remove("hide")
+                showElementWithAnimation(el)
             })
         }, 300)
     }
@@ -464,7 +486,7 @@ function reloadYoutuber() {
 
         const currentYoutuber = showingYoutuber
         reloadingYoutuber = currentYoutuber
-        reloadBtn.classList.add("reloading")
+        playAnimation(reloadBtn, "reloading")
         reloadBtnTooltip.innerHTML = "새로고침중..."
         console.log(`${currentYoutuber}: RELOAD START`)
         const newData = await window.getInfo(window.getYoutuberFromStorage(currentYoutuber)["link"])
@@ -478,16 +500,20 @@ function reloadYoutuber() {
             window.setYoutuberReloadTime(currentYoutuber, getDate())
             console.log(`${currentYoutuber}: DATA SAVED`)
         } else {
-            const videos: Array<string> = []
+            const videos: Array<string> = [] // 불러온 동영상
             newData["video"].forEach((dt: any) => { videos.push(dt["title"]) })
-            const beforeVideos: Array<string> = []
+
+            const beforeVideos: Array<string> = [] // 기존 동영상
             window.getYoutuberFromStorage(currentYoutuber)["video"].forEach((dt: any) => { beforeVideos.push(dt["title"]) })
-            const lives: Array<string> = []
+
+            const lives: Array<string> = [] // 불러온 라이브
             newData["live"].forEach((dt: any) => { lives.push(dt["title"]) })
-            const beforeLives: Array<string> = []
+
+            const beforeLives: Array<string> = [] // 기존 라이브
             window.getYoutuberFromStorage(currentYoutuber)["live"].forEach((dt: any) => { beforeLives.push(dt["title"]) })
-            const sub = newData["subscribers"]
-            const beforeSub = window.getYoutuberFromStorage(currentYoutuber)["subscribers"]
+
+            const sub = newData["subscribers"] // 불러온 구독자 수
+            const beforeSub = window.getYoutuberFromStorage(currentYoutuber)["subscribers"] // 기존 구독자 수
 
             const videoFilter = videos.filter((dt: string) => {
                 if (beforeVideos.includes(dt)) { return false }
@@ -497,6 +523,7 @@ function reloadYoutuber() {
                 if (beforeLives.includes(dt)) { return false }
                 else { return true }
             })
+
             window.saveYoutuberToStorage({...window.getYoutuberFromStorage(currentYoutuber), ...newData})
             isReloading = false
             reloadingYoutuber = ""
@@ -562,16 +589,13 @@ async function handleParmamInput() {
 
 function addYoutuberBtnClickEffect() {
     if (addYoutuberPopup.classList.contains("show")) { // hide
-        addYoutuberPopup.classList.remove("show")
-        addYoutuberPopup.classList.add("hide")
+        hideElementWithAnimation(addYoutuberPopup)
         addYoutuberBtn.style.transform = "rotate(0deg)"
     } else if (addYoutuberPopup.classList.contains("hide")) { // show
-        addYoutuberPopup.classList.remove("hide")
-        addYoutuberPopup.classList.add("show")
+        showElementWithAnimation(addYoutuberPopup)
         addYoutuberBtn.style.transform = "rotate(45deg)"
     } else { // show
-        addYoutuberPopup.classList.remove("hide")
-        addYoutuberPopup.classList.add("show")
+        showElementWithAnimation(addYoutuberPopup)
         addYoutuberBtn.style.transform = "rotate(45deg)"
     }
 }
@@ -581,15 +605,11 @@ paramInput.addEventListener("change", handleParmamInput)
 let isMorePopupOpen: Boolean = false
 document.getElementById("moreBtn").addEventListener("click", () => {
     if (isMorePopupOpen) {
-        moreBtnPopupFrame.classList.add("hide")
-        moreBtnPopupFrame.classList.remove("show")
-        setTimeout(() => { moreBtnPopupFrame.style.display = "none" }, 300)
+        hideElementWithAnimation(moreBtnPopupFrame, true)
         isMorePopupOpen = false
     }
     else {
-        moreBtnPopupFrame.style.display = "block"
-        moreBtnPopupFrame.classList.add("show")
-        moreBtnPopupFrame.classList.remove("hide")
+        showElementWithAnimation(moreBtnPopupFrame)
         isMorePopupOpen = true
     }
 })
@@ -601,26 +621,31 @@ window.addEventListener("load", () => {
     showRecentYoutuber()
     autoReloadYoutuber()
     if (!localStorage["youtuber"]) { 
-        infoFrame.classList.remove("showInfoFrame")
-        contentFrame.classList.remove("default")
-        infoFrame.classList.add("hideInfoFrame")
-        contentFrame.classList.add("longWidth")
+        advencedPlayAnimation(contentFrame, {
+            animationName: "longWidth",
+            animationDuration: 300,
+            removeClassName: "default"
+        })
+        playAnimation(infoFrame, "hideInfoFrame")
         return
     }
     if (JSON.parse(localStorage["youtuber"]).length == 0) {
-        infoFrame.classList.remove("showInfoFrame")
-        contentFrame.classList.remove("default")
-        infoFrame.classList.add("hideInfoFrame")
-        contentFrame.classList.add("longWidth")
+        advencedPlayAnimation(contentFrame, {
+            animationName: "longWidth",
+            animationDuration: 300,
+            removeClassName: "default"
+        })
+        playAnimation(infoFrame, "hideInfoFrame")
     } else {
-        infoFrame.classList.remove("hideInfoFrame")
-        contentFrame.classList.remove("longWidth")
-        infoFrame.classList.add("showInfoFrame")
-        contentFrame.classList.add("default")
+        advencedPlayAnimation(contentFrame, {
+            animationName: "default",
+            animationDuration: 300,
+            removeClassName: "longWidth"
+        })
+        playAnimation(infoFrame, "showInfoFrame")
 
         document.querySelectorAll("#contentFrame .welcome").forEach((el: HTMLElement) => {
-            el.classList.add("hide")
-            setTimeout(() => { el.style.display = "none" }, 300)
+            hideElementWithAnimation(el, true)
         })
     }
 })

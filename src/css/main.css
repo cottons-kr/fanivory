@@ -36,7 +36,6 @@ html, body {
           transition-delay: 0.25s;
   overflow: hidden;
   white-space: nowrap;
-  line-height: 24px;
   border: solid #DEDEDE 1px;
   -webkit-box-shadow: rgba(0, 0, 0, 0.04) 0rem 0.125rem 0.625rem 0rem;
           box-shadow: rgba(0, 0, 0, 0.04) 0rem 0.125rem 0.625rem 0rem;

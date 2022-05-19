@@ -82,12 +82,7 @@ img[alt="More"] {
 
 #aboutIcon {
   background: url("../asset/comment.svg") no-repeat fixed;
-  background-size: cover;
-}
-
-#aboutIcon:active {
-  background: url("../asset/comment_active.svg") no-repeat fixed;
-  background-size: cover;
+  background-size: cover !important;
 }
 
 #aboutIcon:hover .tooltip {

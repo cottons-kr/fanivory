@@ -9,7 +9,6 @@ const paramInput: HTMLInputElement = document.querySelector("#paramInput")
 const resultList = document.getElementById("resultList")
 const contentFrame = document.getElementById("contentFrame")
 const loading = document.getElementById("contentLoading")
-const moreBtnPopupFrame: HTMLDivElement = document.querySelector("#moreBtnPopupFrame")
 const reloadBtn: HTMLDivElement = document.querySelector("#reloadBtn img")
 const reloadBtnTooltip: HTMLSpanElement = document.querySelector("#reloadBtn .tooltip")
 const liveListFrame: HTMLDivElement = document.querySelector("#liveList")
@@ -24,6 +23,7 @@ const removeBtn: HTMLDivElement = document.querySelector("#removeBtn")
 const subscriberFrame = document.getElementById("subscriberFrame")
 const liveListTitle: HTMLDivElement = document.querySelector("#liveTitle")
 const videoListTitle: HTMLDivElement = document.querySelector("#videoTitle")
+const aboutContent: HTMLElement = document.querySelector("#aboutPopupFrame p")
 
 let loadingYoutuber: string = ""
 let showingYoutuber: string = ""
@@ -45,63 +45,6 @@ const MAX_AUTO_RELOAD_COUNT = "max_auto_reload_count"
 
 function getThumbnail(url: string) {
     return (`https://i.ytimg.com/vi/${url.replace(/^.*(?:youtu.be\/|v\/|e\/|u\/\w+\/|embed\/|v=)([^#\&\?]*).*/g,"$1")}/original.jpg`)
-}
-
-function hideElement(el: HTMLElement) {
-    el.style.display = "none"
-}
-
-function showElement(el: HTMLElement) {
-    el.style.display = "block"
-}
-
-function hideElementWithAnimation(el: HTMLElement, displayNone: boolean = false, animationDuration: number = 300) {
-    el.classList.add("hide")
-    el.classList.remove("show")
-    if (displayNone) {
-        setTimeout(() => { el.style.display = "none" }, animationDuration)
-    }
-}
-
-function showElementWithAnimation(el: HTMLElement) {
-    el.style.display = "block"
-    el.classList.add("show")
-    el.classList.remove("hide")
-}
-
-function advencedPlayAnimation(el: HTMLElement, param={
-    animationName: "",
-    animationDuration: 300,
-    removeClassName: ""
-}) {
-    el.classList.remove(param.removeClassName)
-    el.classList.add(param.animationName)
-}
-
-function playAnimation(el: HTMLElement, animationName: string) {
-    if (animationName.includes("hide")) {
-        el.classList.remove(animationName.replace("hide", "show"))
-    }
-    else if (animationName.includes("show")) {
-        el.classList.remove(animationName.replace("show", "hide"))
-    }
-    el.classList.add(animationName)
-}
-
-function removeAllChild(el: HTMLElement, param={ transition: false }) {
-    if (param.transition) {
-        el.childNodes.forEach((e: any) => {
-            if (e.tagName) {
-                advencedPlayAnimation(e, {
-                    animationName: "hideVideo",
-                    animationDuration: 300,
-                    removeClassName: "showVideo"
-                })
-            }
-        })
-        setTimeout(() => { while (el.firstChild) { el.removeChild(el.lastChild) } }, 300)
-    }
-    else { while (el.firstChild) { el.removeChild(el.lastChild) } }
 }
 
 function loadSavedYoutubers() {
@@ -280,12 +223,15 @@ function showYoutuber(name: string, force=false): void {
         })
     }
 
-    if (moreBtnPopupFrame.classList.contains("show")) {
-        hideElementWithAnimation(moreBtnPopupFrame)
+    if (isMorePopupOpen) {
+        isMorePopupOpen = hidePopup(moreBtnPopupFrame)
+    }
+    if (isAboutPopupOpen) {
+        document.getElementById("aboutIcon").style.background = `url("./asset/comment.svg") no-repeat fixed`
+        isAboutPopupOpen = hidePopup(aboutPopupFrame)
     }
 
     document.querySelectorAll("#contentFrame .welcome").forEach((el: HTMLElement) => {
-        console.log(el)
         hideElementWithAnimation(el, true)
     })
     showElementWithAnimation(videoListFrame)
@@ -298,6 +244,8 @@ function showYoutuber(name: string, force=false): void {
         playAnimation(channelName, "showInfo")
         playAnimation(subscriberFrame, "showInfo")
         playAnimation(profileImg, "showInfo")
+
+        aboutContent.innerText = data["about"]["about"]
 
         profileImg.src = data["profileImg"]
         channelName.innerHTML = data["name"]
@@ -602,17 +550,6 @@ function addYoutuberBtnClickEffect() {
 
 addYoutuberBtn.addEventListener("click", addYoutuberBtnClickEffect)
 paramInput.addEventListener("change", handleParmamInput)
-let isMorePopupOpen: Boolean = false
-document.getElementById("moreBtn").addEventListener("click", () => {
-    if (isMorePopupOpen) {
-        hideElementWithAnimation(moreBtnPopupFrame, true)
-        isMorePopupOpen = false
-    }
-    else {
-        showElementWithAnimation(moreBtnPopupFrame)
-        isMorePopupOpen = true
-    }
-})
 
 removeBtn.addEventListener("click", () => { removeYoutuber(showingYoutuber) })
 

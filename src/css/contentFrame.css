@@ -106,8 +106,7 @@
 .hoveringContent {
   -webkit-transition: background 0.3s;
   transition: background 0.3s;
-  background: -webkit-gradient(linear, left bottom, left top, color-stop(80%, rgba(255, 255, 255, 0.75)), to(rgba(0, 0, 0, 0)));
-  background: linear-gradient(0deg, rgba(255, 255, 255, 0.75) 80%, rgba(0, 0, 0, 0));
+  background: rgba(255, 255, 255, 0.8);
   border-radius: 10px;
   width: calc(100% - 20px);
   height: calc(100% - 20px);

@@ -192,7 +192,30 @@ window.getInfo = async (url: string) => {
 
 window.searchChannel = async (param: string) => {
     if (param.startsWith("https://")) {
-        ;
+        const data = await getPage(true, param)
+        const page: any = data[0]
+        const browser = data[1]
+
+        await page.waitForSelector("#app > div.page-container > ytm-browse > ytm-c4-tabbed-header-renderer > div.c4-tabbed-header-channel.cbox > div > h1", { timeout: 10000 })
+        try {
+            const name = await page.$eval("#app > div.page-container > ytm-browse > ytm-c4-tabbed-header-renderer > div.c4-tabbed-header-channel.cbox > div > h1", (el: { innerHTML: any }) => { return el.innerHTML })
+            const profile = await page.$eval("#app > div.page-container > ytm-browse > ytm-c4-tabbed-header-renderer > div.c4-tabbed-header-channel.cbox > ytm-profile-icon > img", (el: { src: any }) => { return el.src })
+            const link = param
+            const sub = await page.$eval("#app > div.page-container > ytm-browse > ytm-c4-tabbed-header-renderer > div.c4-tabbed-header-channel.cbox > div > div > span", (el: { innerHTML: string }) => { return el.innerHTML.split(" ")[1] })
+            const channelList =  [
+                {
+                    "name": name, 
+                    "profile": profile,
+                    "sub": sub,
+                    "link": link
+                }
+            ]
+            await browser.close()
+            return channelList
+        }
+        catch {
+            return []
+        }
     }
 
     const data = await getPage(true, YOUTUBE_URL+"/results?search_query="+param)

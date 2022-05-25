@@ -22,3 +22,4 @@
 - [ ] Setting menu
 - [ ] See About
 - [ ] Home menu
+- [x] Notification

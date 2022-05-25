@@ -43,10 +43,10 @@ img[alt="youtube"] {
   display: -ms-flexbox;
   display: flex;
   -webkit-transform: translateY(25px);
-          transform: translateY(25px);
+  transform: translateY(25px);
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   position: absolute;
 }
 
@@ -61,8 +61,8 @@ img[alt="youtube"] {
   display: flex;
   width: 125px !important;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   float: left;
 }
 
@@ -73,7 +73,7 @@ img[alt="youtube"] {
 
 #mainBtn div {
   -webkit-transition-duration: 0.3s;
-          transition-duration: 0.3s;
+  transition-duration: 0.3s;
 }
 
 img[alt="More"] {
@@ -88,7 +88,7 @@ img[alt="More"] {
 #aboutIcon:hover .tooltip {
   opacity: 1;
   -webkit-transition-delay: 0.5s;
-          transition-delay: 0.5s;
+  transition-delay: 0.5s;
 }
 
 #alarmBtn {
@@ -104,7 +104,7 @@ img[alt="More"] {
 #alarmBtn:hover .tooltip {
   opacity: 1;
   -webkit-transition-delay: 0.5s;
-          transition-delay: 0.5s;
+  transition-delay: 0.5s;
 }
 
 #alarmBtn .tooltip {
@@ -123,7 +123,7 @@ img[alt="More"] {
 #locationIcon:hover .tooltip {
   opacity: 1;
   -webkit-transition-delay: 0.5s;
-          transition-delay: 0.5s;
+  transition-delay: 0.5s;
 }
 
 #moreBtn {
@@ -138,27 +138,27 @@ img[alt="More"] {
 #moreBtn:hover .tooltip {
   opacity: 1;
   -webkit-transition-delay: 0.5s;
-          transition-delay: 0.5s;
+  transition-delay: 0.5s;
 }
 
 .hideInfo {
   -webkit-animation: hideInfo 0.3s forwards;
-          animation: hideInfo 0.3s forwards;
+  animation: hideInfo 0.3s forwards;
 }
 
 .showInfo {
   -webkit-animation: showInfo 0.3s forwards;
-          animation: showInfo 0.3s forwards;
+  animation: showInfo 0.3s forwards;
 }
 
 .hideInfoFrame {
   -webkit-animation: hideInfoFrame 0.3s forwards;
-          animation: hideInfoFrame 0.3s forwards;
+  animation: hideInfoFrame 0.3s forwards;
 }
 
 .showInfoFrame {
   -webkit-animation: showInfoFrame 0.3s forwards;
-          animation: showInfoFrame 0.3s forwards;
+  animation: showInfoFrame 0.3s forwards;
 }
 
 @-webkit-keyframes hideInfo {
@@ -240,3 +240,4 @@ img[alt="More"] {
     left: 50px;
   }
 }
+/*# sourceMappingURL=infoFrame.css.map */

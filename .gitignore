@@ -4,3 +4,4 @@ src/scss
 cls.sh
 build/
 dist/
+src/css/*.css.map

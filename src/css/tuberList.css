@@ -4,10 +4,10 @@
   float: left;
   margin-right: 20px;
   -webkit-backface-visibility: hidden;
-          backface-visibility: hidden;
+  backface-visibility: hidden;
   -webkit-box-flex: 0;
-      -ms-flex: 0 0 auto;
-          flex: 0 0 auto;
+  -ms-flex: 0 0 auto;
+  flex: 0 0 auto;
 }
 
 .tuberListContent img {
@@ -46,9 +46,10 @@
   margin: 20px;
   opacity: 0.3;
   -webkit-transition-duration: 0.3s;
-          transition-duration: 0.3s;
+  transition-duration: 0.3s;
 }
 
 #addYoutuberBtn:hover {
   opacity: 0.75;
 }
+/*# sourceMappingURL=tuberList.css.map */

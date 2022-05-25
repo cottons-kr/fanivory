@@ -20,8 +20,8 @@
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   margin: auto;
 }
 
@@ -37,28 +37,28 @@
 
 .reloading {
   -webkit-animation: reloading 1s infinite;
-          animation: reloading 1s infinite;
+  animation: reloading 1s infinite;
 }
 
 @-webkit-keyframes reloading {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
     -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
 @keyframes reloading {
   0% {
     -webkit-transform: rotate(0deg);
-            transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
     -webkit-transform: rotate(360deg);
-            transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
 
@@ -78,5 +78,6 @@
 #moreBtnList div:hover .tooltip {
   opacity: 1;
   -webkit-transition-delay: 0.5s;
-          transition-delay: 0.5s;
+  transition-delay: 0.5s;
 }
+/*# sourceMappingURL=moreBtnPopup.css.map */

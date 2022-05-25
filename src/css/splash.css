@@ -5,7 +5,7 @@
   background-color: white;
   opacity: 1;
   -webkit-animation: hideSplash 0.5s forwards 1s;
-          animation: hideSplash 0.5s forwards 1s;
+  animation: hideSplash 0.5s forwards 1s;
   z-index: 9999;
 }
 
@@ -28,3 +28,4 @@
     z-index: -999;
   }
 }
+/*# sourceMappingURL=splash.css.map */

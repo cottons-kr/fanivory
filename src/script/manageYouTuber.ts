@@ -8,7 +8,7 @@ function loadSavedYoutubers() {
         const youtubers: Array<any> = JSON.parse(localStorage["youtuber"])
         youtubers.forEach(data => { addContentToList(data["profileImg"], data["name"]) })
     }
-    if (window.getYoutuberListFromStorage().length == 0) {
+    if (getYoutuberListFromStorage().length == 0) {
         const addBtnFrame = document.createElement("div")
         const addBtnImg = document.createElement("img")
         if (addYoutuberPopup.classList.contains("show")) {
@@ -30,7 +30,7 @@ function loadSavedYoutubers() {
 }
 
 function showRecentYoutuber() {
-    const status = window.getStatusFromStorage()
+    const status = getStatusFromStorage()
     let recentYoutuber = status["recentYoutuber"]
     if (recentYoutuber) { showYoutuber(recentYoutuber) }
     else if (localStorage["youtuber"]) {
@@ -78,12 +78,12 @@ async function addYoutuber(url: string) {
 
     let data = await window.getYoutuber(url)
     addContentToList(data["profileImg"], data["name"])
-    window.saveYoutuberToStorage(data)
+    saveYoutuberToStorage(data)
     loadingYoutuber = data["name"]
     showYoutuber(data["name"], true)
     showElementWithAnimation(loading)
 
-    window.saveYoutuberToStorage({...data, ...await window.getInfo(url)})
+    saveYoutuberToStorage({...data, ...await window.getInfo(url)})
     hideElementWithAnimation(loading, true)
     loadingYoutuber = ""
     setTimeout(() => { showYoutuber(data["name"], true) }, 500)
@@ -107,7 +107,7 @@ function removeYoutuber(name: string) {
 
     removeAllChild(liveListFrame, { transition: true })
     removeAllChild(videoListFrame, { transition: true })
-    if (!window.getYoutuberListFromStorage()[0]) { showYoutuber(window.getYoutuberListFromStorage()[0]) }
+    if (!getYoutuberListFromStorage()[0]) { showYoutuber(getYoutuberListFromStorage()[0]) }
     else {
         setTimeout(() =>{
             advencedPlayAnimation(contentFrame, {
@@ -122,7 +122,7 @@ function removeYoutuber(name: string) {
             })
         }, 300)
     }
-    window.removeYoutuberFromStorage(name)
+    removeYoutuberFromStorage(name)
     loadSavedYoutubers()
 }
 
@@ -130,45 +130,49 @@ function sleep(time: number) {
     return new Promise(resolve => setTimeout(resolve, time))
 }
 
+function checkOverlap(newData: any, name: string) {
+    const videos: Array<string> = [] // 불러온 동영상
+    newData["video"].forEach((dt: any) => { videos.push(dt["title"]) })
+
+    const beforeVideos: Array<string> = [] // 기존 동영상
+    getYoutuberFromStorage(name)["video"].forEach((dt: any) => { beforeVideos.push(dt["title"]) })
+
+    const lives: Array<string> = [] // 불러온 라이브
+    newData["live"].forEach((dt: any) => { lives.push(dt["title"]) })
+
+    const beforeLives: Array<string> = [] // 기존 라이브
+    getYoutuberFromStorage(name)["live"].forEach((dt: any) => { beforeLives.push(dt["title"]) })
+
+    if (lives.length != beforeLives.length) { // @ts-ignore
+        sendNotification(`${currentYoutuber}(이)가 Live를 시작했습니다!`, lives[0]["title"])
+    }
+    if (videos.length != beforeVideos.length) { // @ts-ignore
+        sendNotification(`${currentYoutuber}의 새로운 동영상`, videos[0]["title"])
+    }
+}
+
 async function autoReloadYoutuber() {
     while (true) {
-        if (!window.getSettingFromStorage(AUTO_RELOAD_ENABLE)) { await sleep(window.getSettingFromStorage(AUTO_RELOAD_DELAY)); continue }
+        if (!getSettingFromStorage(AUTO_RELOAD_ENABLE)) { await sleep(getSettingFromStorage(AUTO_RELOAD_DELAY)); continue }
         else {
-            window.getYoutuberListFromStorage().forEach(async (name: string) => {
-                if (autoReloadedYoutuber.length == window.getYoutuberListFromStorage().length) { autoReloadedYoutuber = [] }
+            getYoutuberListFromStorage().forEach(async (name: string) => {
+                if (autoReloadedYoutuber.length == getYoutuberListFromStorage().length) { autoReloadedYoutuber = [] }
                 if (autoReloadingYoutuber.includes(name) || autoReloadedYoutuber.includes(name)) { return }
-                if (autoReloadingYoutuber.length >= window.getSettingFromStorage(MAX_AUTO_RELOAD_COUNT)) { return }
+                if (autoReloadingYoutuber.length >= getSettingFromStorage(MAX_AUTO_RELOAD_COUNT)) { return }
                 if (name == showingYoutuber) { return }
                 console.log(`${name}: AUTORELOAD START`)
 
                 autoReloadingYoutuber.push(name)
-                const newData = await window.getInfo(window.getYoutuberFromStorage(name)["link"])
-                window.saveYoutuberToStorage({...window.getYoutuberFromStorage(name), ...newData})
+                const newData = await window.getInfo(getYoutuberFromStorage(name)["link"])
+                saveYoutuberToStorage({...getYoutuberFromStorage(name), ...newData})
                 console.log(`${name}: AUTORELOADED`)
-                window.setYoutuberReloadTime(name, getDate())
+                setYoutuberReloadTime(name, getDate())
                 autoReloadedYoutuber.push(name)
                 autoReloadingYoutuber.splice(autoReloadingYoutuber.indexOf(name), 1)
 
-                const videos: Array<string> = [] // 불러온 동영상
-                newData["video"].forEach((dt: any) => { videos.push(dt["title"]) })
-    
-                const beforeVideos: Array<string> = [] // 기존 동영상
-                window.getYoutuberFromStorage(name)["video"].forEach((dt: any) => { beforeVideos.push(dt["title"]) })
-    
-                const lives: Array<string> = [] // 불러온 라이브
-                newData["live"].forEach((dt: any) => { lives.push(dt["title"]) })
-    
-                const beforeLives: Array<string> = [] // 기존 라이브
-                window.getYoutuberFromStorage(name)["live"].forEach((dt: any) => { beforeLives.push(dt["title"]) })
-
-                if (lives.length != beforeLives.length) { // @ts-ignore
-                    sendNotification(`${currentYoutuber}(이)가 Live를 시작했습니다!`, lives[0]["title"])
-                }
-                if (videos.length != beforeVideos.length) { // @ts-ignore
-                    sendNotification(`${currentYoutuber}의 새로운 동영상`, videos[0]["title"])
-                }
+                checkOverlap(newData, name)
             })
-            await sleep(window.getSettingFromStorage(AUTO_RELOAD_DELAY))
+            await sleep(getSettingFromStorage(AUTO_RELOAD_DELAY))
         }
     }
 }
@@ -197,31 +201,31 @@ function reloadYoutuber() {
         playAnimation(reloadBtn, "reloading")
         reloadBtnTooltip.innerHTML = "새로고침중..."
         console.log(`${currentYoutuber}: RELOAD START`)
-        const newData = await window.getInfo(window.getYoutuberFromStorage(currentYoutuber)["link"])
+        const newData = await window.getInfo(getYoutuberFromStorage(currentYoutuber)["link"])
         console.log(`${currentYoutuber}: RELOADED`)
         if (currentYoutuber !== showingYoutuber) {
-            window.saveYoutuberToStorage({...window.getYoutuberFromStorage(currentYoutuber), ...newData})
+            saveYoutuberToStorage({...getYoutuberFromStorage(currentYoutuber), ...newData})
             reloadBtn.classList.remove("reloading")
             isReloading = false
             reloadingYoutuber = ""
             reloadBtnTooltip.innerHTML = `최근 새로고침 : ${getDate()}`
-            window.setYoutuberReloadTime(currentYoutuber, getDate())
+            setYoutuberReloadTime(currentYoutuber, getDate())
             console.log(`${currentYoutuber}: DATA SAVED`)
         } else {
             const videos: Array<string> = [] // 불러온 동영상
             newData["video"].forEach((dt: any) => { videos.push(dt["title"]) })
 
             const beforeVideos: Array<string> = [] // 기존 동영상
-            window.getYoutuberFromStorage(currentYoutuber)["video"].forEach((dt: any) => { beforeVideos.push(dt["title"]) })
+            getYoutuberFromStorage(currentYoutuber)["video"].forEach((dt: any) => { beforeVideos.push(dt["title"]) })
 
             const lives: Array<string> = [] // 불러온 라이브
             newData["live"].forEach((dt: any) => { lives.push(dt["title"]) })
 
             const beforeLives: Array<string> = [] // 기존 라이브
-            window.getYoutuberFromStorage(currentYoutuber)["live"].forEach((dt: any) => { beforeLives.push(dt["title"]) })
+            getYoutuberFromStorage(currentYoutuber)["live"].forEach((dt: any) => { beforeLives.push(dt["title"]) })
 
             const sub = newData["subscribers"] // 불러온 구독자 수
-            const beforeSub = window.getYoutuberFromStorage(currentYoutuber)["subscribers"] // 기존 구독자 수
+            const beforeSub = getYoutuberFromStorage(currentYoutuber)["subscribers"] // 기존 구독자 수
 
             const videoFilter = videos.filter((dt: string) => {
                 if (beforeVideos.includes(dt)) { return false }
@@ -232,31 +236,26 @@ function reloadYoutuber() {
                 else { return true }
             })
 
-            window.saveYoutuberToStorage({...window.getYoutuberFromStorage(currentYoutuber), ...newData})
+            saveYoutuberToStorage({...getYoutuberFromStorage(currentYoutuber), ...newData})
             isReloading = false
             reloadingYoutuber = ""
             reloadBtnTooltip.innerHTML = `최근 새로고침 : ${getDate()}`
-            window.setYoutuberReloadTime(currentYoutuber, getDate())
+            setYoutuberReloadTime(currentYoutuber, getDate())
             reloadBtn.classList.remove("reloading")
 
-            if (lives.length != beforeLives.length) { // @ts-ignore
-                sendNotification(`${currentYoutuber}(이)가 Live를 시작했습니다!`, lives[0]["title"])
-            }
-            if (videos.length != beforeVideos.length) { // @ts-ignore
-                sendNotification(`${currentYoutuber}의 새로운 동영상`, videos[0]["title"])
-            }
+            checkOverlap(newData, currentYoutuber)
 
             if (lives.length != beforeLives.length || videos.length != beforeLives.length) {
                 showYoutuber(currentYoutuber)
                 return
             }
             else if (videoFilter.length == 0 && liveFilter.length == 0 && sub == beforeSub) {
-                updateVideo(window.getYoutuberFromStorage(currentYoutuber)["video"])
-                updateLive(window.getYoutuberFromStorage(currentYoutuber)["live"])
+                updateVideo(getYoutuberFromStorage(currentYoutuber)["video"])
+                updateLive(getYoutuberFromStorage(currentYoutuber)["live"])
                 return
             }
             else if (sub !== beforeSub) {
-                updateInfo(window.getYoutuberFromStorage(currentYoutuber)["about"])
+                updateInfo(getYoutuberFromStorage(currentYoutuber)["about"])
                 return
             }
             else {
@@ -264,7 +263,7 @@ function reloadYoutuber() {
                 return
             }
         }
-    }, window.getSettingFromStorage(RELOAD_DELAY))
+    }, getSettingFromStorage(RELOAD_DELAY))
 }
 
 async function handleParmamInput() {

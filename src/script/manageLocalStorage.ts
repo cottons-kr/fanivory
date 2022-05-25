@@ -1,9 +1,9 @@
-window.resetStorage = (): void => {
+function resetStorage(): void {
     localStorage.clear()
     return
 }
 
-window.getYoutuberFromStorage = (name: string): object => {
+function getYoutuberFromStorage(name: string): any {
     const db = JSON.parse(localStorage["youtuber"])
 
     for (let youtuber of db) {
@@ -12,7 +12,7 @@ window.getYoutuberFromStorage = (name: string): object => {
     }
 }
 
-window.saveYoutuberToStorage = (data: any): object => {
+function saveYoutuberToStorage(data: any): object {
     let db = JSON.parse(localStorage["youtuber"])
     const name: string = data["name"]
     const list: Array<string> = JSON.parse(localStorage["youtuberlist"])
@@ -33,7 +33,7 @@ window.saveYoutuberToStorage = (data: any): object => {
     return db
 }
 
-window.removeYoutuberFromStorage = (name: string): object => {
+function removeYoutuberFromStorage(name: string): object {
     let db = JSON.parse(localStorage["youtuber"])
 
     db = db.filter((data: any): Boolean => {
@@ -50,37 +50,37 @@ window.removeYoutuberFromStorage = (name: string): object => {
     return db
 }
 
-window.getYoutuberListFromStorage = (): void => {
+function getYoutuberListFromStorage(): Array<any> {
     const db = JSON.parse(localStorage["youtuberlist"])
     return db
 }
 
-window.getStatusFromStorage = (): object => {
+function getStatusFromStorage(): any {
     if (localStorage["status"]) { return JSON.parse(localStorage["status"]) }
     else { return {} }
 }
 
-window.setRecentYoutuberToStorage = (name: string): void => {
+function setRecentYoutuberToStorage(name: string): void {
     const db = JSON.parse(localStorage["status"])
     db["recentYoutuber"] = name
     localStorage["status"] = JSON.stringify(db)
     return db
 }
 
-window.setYoutuberReloadTime = (name: string, time: string): void => {
+function setYoutuberReloadTime(name: string, time: string): void {
     const db = window.getYoutuberFromStorage(name)
 
     db["about"]["recentReload"] = time
     window.saveYoutuberToStorage(db)
 }
 
-window.getYoutuberReloadTime = (name: string): string => {
+function getYoutuberReloadTime(name: string): string {
     const db = window.getYoutuberFromStorage(name)["about"]
     if (db["recentReload"]) { return db["recentReload"] }
     else { return "없음" }
 }
 
-window.getSettingFromStorage = (name: string = "all"): Boolean | number | undefined => {
+function getSettingFromStorage(name: string = "all"): any {
     if (name == "all") { return JSON.parse(localStorage["setting"]) }
     else { return JSON.parse(localStorage["setting"])[name] }
 }

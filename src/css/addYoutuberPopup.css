@@ -38,7 +38,7 @@
   padding: 8px;
   margin: 3px;
   margin-bottom: 10px;
-  background-color: rgba(169, 213, 245, 0.7);
+  background-color: rgba(169, 213, 245, 0.4);
   border-radius: 10px;
   -webkit-backdrop-filter: blur(5px);
           backdrop-filter: blur(5px);
@@ -76,4 +76,3 @@
 .resultSub {
   font-size: 12px;
 }
-/*# sourceMappingURL=addYoutuberPopup.css.map */

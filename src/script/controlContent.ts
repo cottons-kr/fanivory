@@ -1,6 +1,7 @@
 const joinDate: HTMLElement = document.querySelector("#joinDate")
 const totalViews: HTMLElement = document.querySelector("#totalViews")
 const locationTooltip: HTMLSpanElement = document.querySelector("#locationIcon .tooltip")
+const alarmTooltip: HTMLSpanElement = document.querySelector("#alarmBtn .tooltip")
 const subscribers: HTMLSpanElement = document.querySelector("#subscribers")
 const aboutContent: HTMLElement = document.querySelector("#aboutPopupFrame p")
 const addYoutuberPopup = document.getElementById("addYoutuberPopup")
@@ -164,6 +165,14 @@ function showYoutuber(name: string, force=false): void {
     if (isAboutPopupOpen) {
         document.getElementById("aboutIcon").style.background = `url("./asset/comment.svg") no-repeat fixed`
         isAboutPopupOpen = hidePopup(aboutPopupFrame)
+    }
+    if (isSetNotification()) {
+        alarmTooltip.innerHTML = "알람 설정 : 켜짐"
+        alarmBtn.style.background = `url("./asset/bell_active.svg") no-repeat fixed`
+    }
+    else if (!isSetNotification()) {
+        alarmTooltip.innerHTML = "알람 설정 : 꺼짐"
+        alarmBtn.style.background = `url("./asset/bell.svg") no-repeat fixed`
     }
 
     playAnimation(liveListTitle, "hideList")

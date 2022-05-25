@@ -148,6 +148,25 @@ async function autoReloadYoutuber() {
                 window.setYoutuberReloadTime(name, getDate())
                 autoReloadedYoutuber.push(name)
                 autoReloadingYoutuber.splice(autoReloadingYoutuber.indexOf(name), 1)
+
+                const videos: Array<string> = [] // 불러온 동영상
+                newData["video"].forEach((dt: any) => { videos.push(dt["title"]) })
+    
+                const beforeVideos: Array<string> = [] // 기존 동영상
+                window.getYoutuberFromStorage(name)["video"].forEach((dt: any) => { beforeVideos.push(dt["title"]) })
+    
+                const lives: Array<string> = [] // 불러온 라이브
+                newData["live"].forEach((dt: any) => { lives.push(dt["title"]) })
+    
+                const beforeLives: Array<string> = [] // 기존 라이브
+                window.getYoutuberFromStorage(name)["live"].forEach((dt: any) => { beforeLives.push(dt["title"]) })
+
+                if (lives.length != beforeLives.length) { // @ts-ignore
+                    sendNotification(`${currentYoutuber}(이)가 Live를 시작했습니다!`, lives[0]["title"])
+                }
+                if (videos.length != beforeVideos.length) { // @ts-ignore
+                    sendNotification(`${currentYoutuber}의 새로운 동영상`, videos[0]["title"])
+                }
             })
             await sleep(window.getSettingFromStorage(AUTO_RELOAD_DELAY))
         }
@@ -219,6 +238,14 @@ function reloadYoutuber() {
             reloadBtnTooltip.innerHTML = `최근 새로고침 : ${getDate()}`
             window.setYoutuberReloadTime(currentYoutuber, getDate())
             reloadBtn.classList.remove("reloading")
+
+            if (lives.length != beforeLives.length) { // @ts-ignore
+                sendNotification(`${currentYoutuber}(이)가 Live를 시작했습니다!`, lives[0]["title"])
+            }
+            if (videos.length != beforeVideos.length) { // @ts-ignore
+                sendNotification(`${currentYoutuber}의 새로운 동영상`, videos[0]["title"])
+            }
+
             if (lives.length != beforeLives.length || videos.length != beforeLives.length) {
                 showYoutuber(currentYoutuber)
                 return

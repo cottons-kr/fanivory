@@ -1,0 +1,19 @@
+#popupListFrame {
+  position: absolute;
+  width: 340px;
+  height: 398px;
+  top: 454px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+#popupListFrame::-webkit-scrollbar {
+  display: none;
+}
+
+#popupFrame {
+  width: 300px;
+  padding: 20px;
+  position: relative;
+  margin-bottom: 20px;
+}

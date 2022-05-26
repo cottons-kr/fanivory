@@ -67,7 +67,15 @@ function addContentToList(imgSrc: string, name: string) {
     addBtnFrame.appendChild(addBtnImg)
     addBtnFrame.addEventListener("click", addYoutuberBtnClickEffect)
     addYoutuberBtn = addBtnFrame
-    setTimeout(() => { addYoutuberPopup.style.left = `${addBtnFrame.offsetLeft + 80}px` }, 100)
+    setTimeout(() => {
+        if (getYoutuberListFromStorage().length > 10) { // When Overflow
+            addYoutuberPopup.style.left = `${addBtnFrame.offsetLeft - 245}px`
+            addYoutuberPopup.style.borderRadius = "20px 0px 20px 20px"
+        } else { // No OverFlow
+            addYoutuberPopup.style.left = `${addBtnFrame.offsetLeft + 80}px`
+            addYoutuberPopup.style.borderRadius = "0px 20px 20px 20px"
+        }
+    }, 100)
     
     tuberListFrame.appendChild(addBtnFrame)
 }
@@ -100,9 +108,7 @@ function removeYoutuber(name: string) {
     hideElementWithAnimation(loading)
     hideElementWithAnimation(moreBtnPopupFrame, true)
 
-    document.querySelectorAll("#contentFrame .welcome").forEach((el: HTMLElement) => {
-        hideElementWithAnimation(el, true)
-    })
+    hideElementWithAnimation(homeSection, true)
     showElementWithAnimation(videoListFrame)
 
     removeAllChild(liveListFrame, { transition: true })
@@ -117,9 +123,7 @@ function removeYoutuber(name: string) {
             })
             playAnimation(infoFrame, "hideInfoFrame")
     
-            document.querySelectorAll("#contentFrame .welcome").forEach((el: HTMLElement) => {
-                showElementWithAnimation(el)
-            })
+            showElementWithAnimation(homeSection)
         }, 300)
     }
     removeYoutuberFromStorage(name)

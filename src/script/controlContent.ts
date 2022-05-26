@@ -21,6 +21,7 @@ const removeBtn: HTMLDivElement = document.querySelector("#removeBtn")
 const subscriberFrame = document.getElementById("subscriberFrame")
 const liveListTitle: HTMLDivElement = document.querySelector("#liveTitle")
 const videoListTitle: HTMLDivElement = document.querySelector("#videoTitle")
+const homeSection: HTMLTableSectionElement = document.querySelector(".homeSection")
 
 let addYoutuberBtn = document.getElementById("addYoutuberBtn")
 
@@ -182,6 +183,7 @@ function showYoutuber(name: string, force=false): void {
     playAnimation(subscriberFrame, "hideInfo")
     playAnimation(profileImg, "hideInfo")
     hideElementWithAnimation(loading)
+    hideElementWithAnimation(homeSection, true)
 
     playAnimation(infoFrame, "showInfoFrame")
     if (contentFrame.classList.contains("longWidth")) {
@@ -192,9 +194,6 @@ function showYoutuber(name: string, force=false): void {
         })
     }
 
-    document.querySelectorAll("#contentFrame .welcome").forEach((el: HTMLElement) => {
-        hideElementWithAnimation(el, true)
-    })
     showElementWithAnimation(videoListFrame)
     
     removeAllChild(liveListFrame, { transition: true })
